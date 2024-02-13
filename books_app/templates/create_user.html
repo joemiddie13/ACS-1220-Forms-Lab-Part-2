@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Create New User</h2>
+
+<form method="POST" action="{{ url_for('main.create_user') }}">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username }}
+    {{ form.submit }}
+</form>
+
+{% endblock %}

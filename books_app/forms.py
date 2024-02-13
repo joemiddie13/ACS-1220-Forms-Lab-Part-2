@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateField, SelectField, SubmitField
+from wtforms import StringField, TextAreaField, DateField, SelectField, SubmitField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.validators import DataRequired, Length, ValidationError
 from books_app.models import Audience, Book, Author, Genre
@@ -9,7 +9,7 @@ class BookForm(FlaskForm):
     title = StringField('Book Title', 
         validators=[
             DataRequired(), 
-            Length(min=3, max=80, message="Your message needs to be betweeen 3 and 80 chars")
+            Length(min=3, max=80, message="Your message needs to be between 3 and 80 chars")
         ])
     publish_date = DateField('Date Published', validators=[DataRequired()])
     author = QuerySelectField('Author', query_factory=lambda: Author.query, allow_blank=False)
@@ -24,22 +24,21 @@ class BookForm(FlaskForm):
 
 class AuthorForm(FlaskForm):
     """Form to create an author."""
-
-    # TODO: Fill out the fields in this class for:
-    # - the author's name
-    # - the author's biography (hint: use a TextAreaField)
-    # - a submit button
-
-    # STRETCH CHALLENGE: Add more fields here as well as in `models.py` to
-    # collect more information about the author, such as their birth date,
-    # country, etc.
-    pass
+    name = StringField('Name', validators=[DataRequired()])
+    biography = TextAreaField('Biography')
+    birth_date = DateField('Birth Date', format='%Y-%m-%d', validators=[], render_kw={"placeholder": "YYYY-MM-DD"})
+    country = StringField('Country')
+    submit = SubmitField('Submit')
 
 
 class GenreForm(FlaskForm):
     """Form to create a genre."""
-
-    # TODO: Fill out the fields in this class for:
-    # - the genre's name (e.g. fiction, non-fiction, etc)
-    # - a submit button
+    name = StringField('Genre Name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
     pass
+
+class UserForm(FlaskForm):
+    """Create new user form."""
+    username = StringField('Username', validators=[DataRequired()])
+    favorite_books = QuerySelectMultipleField('Favorite Books', query_factory=lambda: Book.query, get_label='title')
+    submit = SubmitField('Submit')
